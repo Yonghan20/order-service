@@ -1,0 +1,12 @@
+GET http://localhost:3001/order/22
+
+###
+GET http://localhost:3001/order/
+
+###
+POST  http://localhost:3001/order
+Content-Type: application/json
+Authorization: Bearer xxx
+
+###
+PUT  http://localhost:3001/order/123
