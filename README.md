@@ -67,7 +67,7 @@ $ npm run test:cov
 After service is started, you may start to test against the endpoints.  
 This application is built with Visual Studio Code and test with extension [REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client).  
 Alternately, any other REST client can be used for testing as well, like [POSTMAN](https://www.getpostman.com/).  
-Please refer to [restApi.http](rest.Api.http) for list of endpoints
+Please refer to [restApi.http](restApi.http) for list of endpoints
 
 
 ## Support
