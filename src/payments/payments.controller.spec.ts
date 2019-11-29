@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PaymentController } from './payments.controller';
-import { RpcException } from '@nestjs/microservices';
+
 describe('PaymentController', () => {
     let app: TestingModule;
 
@@ -38,7 +38,11 @@ describe('PaymentController', () => {
                 }
             }
             const paymentController = app.get<PaymentController>(PaymentController);
-            expect(paymentController.payment(payload)).toEqual(new RpcException('Card validation failed.'));
+            try {
+                paymentController.payment(payload)
+            } catch (error) {
+                expect(error.message).toEqual('Card validation failed.')
+            }
         });
     });
 });
