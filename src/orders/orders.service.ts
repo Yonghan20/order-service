@@ -1,20 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { Order, OrderResponse } from './orders.model'
+import { Order, OrderResponse, OrderPayload } from './orders.model'
+import { OrderData } from '../data/order'
 
 @Injectable()
 export class OrderService {
-    private orders: Order[] = [];
+    private orders: Order[] = OrderData;
 
-    createOrder(): OrderResponse {
+    createOrder(paylaod: OrderPayload): OrderResponse {
         const id = this.orders.length + 1
-        const orderParam: Order = {
-            id,
-            name: `Package ${id}`,
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            status: 'pending'
-        }
+        const { orderName, card } = paylaod
 
-        this.orders.push(orderParam)
+        this.orders.push({
+            id,
+            name: `${orderName} ${id}`,
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+            status: 'created',
+            card
+        })
+
         return {
             id,
             message: `Order ${id} created.`
@@ -29,7 +32,7 @@ export class OrderService {
         }
 
         this.orders[index].status = 'cancelled'
-        return `Order ${id} cancelled`;
+        return `Order ${id} is cancelled`;
     }
 
     getOrderStatus(id: number): Order | string {
@@ -39,5 +42,16 @@ export class OrderService {
 
     getOrders(): Order[] {
         return this.orders
+    }
+
+    updateOrder(id: number): string {
+        const index = this.orders.findIndex((order => order.id == id))
+
+        if (index < 0) {
+            return 'Order not found'
+        }
+
+        this.orders[index].status = 'delivered'
+        return `Order ${id} is delivered`;
     }
 }

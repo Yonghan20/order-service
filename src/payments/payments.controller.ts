@@ -1,13 +1,21 @@
 import { Controller } from '@nestjs/common';
-import { PaymentService } from './payments.service';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, RpcException } from '@nestjs/microservices';
+import { PaymentPayload, PaymentResponse } from './payments.model'
 
 @Controller()
 export class PaymentController {
-    constructor(private readonly paymentService: PaymentService) { }
 
     @MessagePattern({ cmd: 'PAYMENT_POST' })
-    payment(orderId: number): string {
-        return `Payment for ${orderId} is successfully paid.`
+    payment(payload: PaymentPayload): RpcException | PaymentResponse {
+        const { number } = payload.card
+        if (number == '4000 0000 0000 0000') {
+            throw new RpcException('Card validation failed.');
+        }
+
+        return {
+            status: 200,
+            message: `Payment for Order ${payload.orderId} is successfully paid.`
+        }
+
     }
 }

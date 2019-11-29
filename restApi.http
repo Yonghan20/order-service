@@ -1,12 +1,38 @@
-GET http://localhost:3001/order/22
+### Get Order by Id - append Order id in path
+GET http://localhost:3001/order/2
 
-###
+### Get Order list API
 GET http://localhost:3001/order/
 
-###
+### Create Order Success
 POST  http://localhost:3001/order
 Content-Type: application/json
 Authorization: Bearer xxx
 
-###
-PUT  http://localhost:3001/order/123
+{
+    "orderName": "Custom Order",
+    "card": {
+        "name": "New Customer",
+        "number": "4242 4242 4242 4242",
+        "cvc": 500,
+        "expiry": "08/11"
+    }
+}
+
+### Create Order Fail
+POST  http://localhost:3001/order
+Content-Type: application/json
+Authorization: Bearer xxx
+
+{
+    "orderName": "Custom Order",
+    "card": {
+        "name": "New Customer",
+        "number": "4000 0000 0000 0000",
+        "cvc": 500,
+        "expiry": "08/11"
+    }
+}
+
+### Cancel API - append Order id in path
+PUT  http://localhost:3001/order/1

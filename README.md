@@ -1,6 +1,9 @@
 # order-service
 Terraform and NestJS playground for backend services
 
+# Database is not setup in this app
+[Order data](./src/data/order.ts) is served as database records in array of objects format.
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>

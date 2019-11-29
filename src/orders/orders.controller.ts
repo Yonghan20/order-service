@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Put, Param } from '@nestjs/common';
+import { Controller, Get, Post, Put, Param, Body } from '@nestjs/common';
 import { ClientProxy, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { OrderService } from './orders.service';
-import { Order } from './orders.model'
+import { Order, OrderPayload, PaymentServiceResponse } from './orders.model'
+import { of } from 'rxjs';
+import { catchError, delay, tap } from 'rxjs/operators';
 
 @Controller('order')
 export class OrderController {
@@ -14,9 +16,23 @@ export class OrderController {
     }
 
     @Post()
-    createOrder(): any {
-        const response = this.orderService.createOrder();
-        return this.client.send<string[]>({ cmd: 'PAYMENT_POST' }, [response.id]);
+    createOrder(@Body() payload: OrderPayload): any {
+        const response = this.orderService.createOrder(payload);
+        const orderId = response.id
+        const cmd = { cmd: 'PAYMENT_POST' }
+        const paymentPayload = { orderId, ...payload }
+        return this.client.send<string[]>(cmd, paymentPayload).pipe(
+            catchError(val => of({ error: val.message })),
+            tap((successEvent: any) => {
+                console.log(successEvent)
+                if (successEvent.status == 200) {
+                    delay(5000000)
+                    const res = this.orderService.updateOrder(orderId)
+                    console.log(res)
+                }
+
+            })
+        )
     }
 
     @Put(':id')
